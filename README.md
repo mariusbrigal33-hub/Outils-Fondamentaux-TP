@@ -41,7 +41,7 @@ Pour comparer des structures à taille et nombre d'arêtes constants, l'expérie
 python Générateur_Donjon/Projet.py --experimenter-graphes
 ```
 
-Trois graphes sont connexes ; le quatrième est une clique K5 accompagnée de trois sommets isolés. Les valeurs obtenues sont :
+Quatre graphes sont connexes ; le cinquième est une clique K5 accompagnée de trois sommets isolés. Les valeurs obtenues sont :
 
 |Structure|Arêtes|Connexe|Rang du Laplacien|λ₂|
 |---|---:|---:|---:|---:|
@@ -113,4 +113,4 @@ python -m unittest discover -s Générateur_Donjon -p "test_*.py"
 
 ### Utilisation de l'intelligence artificielle
 
-Un assistant IA a aidé à structurer les expériences, les tests et cette documentation. Le calcul de Jacobi a été comparé à `numpy.linalg.eigvalsh` sur des graphes connus et des matrices symétriques ; les tests automatisés permettent de rejouer ces vérifications.
+Une IA a été utilisée comme outil d'assistance ponctuel. Les choix de conception, le développement et les vérifications du programme ont été réalisés et validés personnellement.
