@@ -1,12 +1,41 @@
-# Générateur de donjons en Python
+# Outils fondamentaux – BUT Informatique
 
-## Présentation
+Ce dépôt regroupe les travaux pratiques et le projet réalisés dans le cadre de la matière **Outils fondamentaux**.
+
+## Arborescence du dépôt
+
+```text
+Outils-Fondamentaux-TP/
+│
+├── Générateur_Donjon/
+│   ├── Projet.py
+│   └── requirements.txt
+│
+├── TP/
+│   ├── TP1.py
+│   ├── TP2.py
+│   ├── TP3.py
+│   ├── TP4.py
+│   └── TP5.py
+│
+└── README.md
+```
+
+## Contenu
+
+### Travaux pratiques
+
+Le dossier `TP` contient les cinq travaux pratiques réalisés au cours de la matière.
+
+## Générateur de donjons en Python
+
+### Présentation
 
 Ce projet consiste à développer un générateur automatique de donjons en Python dans le cadre d'un projet universitaire.
 
 Le programme génère une carte de 40 × 40 cases composée de salles rectangulaires reliées entre elles par des couloirs.
 
-## Fonctionnalités
+### Fonctionnalités
 
 - Génération aléatoire de 8 salles.
 - Vérification du chevauchement entre les salles.
@@ -16,7 +45,7 @@ Le programme génère une carte de 40 × 40 cases composée de salles rectangula
 - Calcul de statistiques sur les générations.
 - Vérification des limites de la carte.
 
-## Partie mathématique
+### Partie mathématique
 
 Le projet utilise plusieurs notions mathématiques :
 
@@ -24,37 +53,37 @@ Le projet utilise plusieurs notions mathématiques :
 - Matrice laplacienne avec la formule L = D - A.
 - Pivot de Gauss pour calculer le rang.
 - Vérification de la connexité à partir du rang de la matrice laplacienne.
-- Calcul de la deuxième plus petite valeur propre λ₂ pour étudier la connectivité algébrique.
+- Calcul de la deuxième plus petite valeur propre λ₂ pour étudier la connectivité algébrique du graphe.
 
-## Expérimentations
+### Expérimentations
 
 Une expérimentation sur 100 générations a donné les résultats suivants :
 
-|Indicateur|Résultat|
-|---|---|
-|Générations réussies|100 / 100|
-|Surface moyenne des salles|46,13|
-|Taux d'occupation moyen|29,51 %|
-|Nombre moyen de connexions|8,14|
-|Longueur moyenne des couloirs|202,16|
-|λ₂ moyenne|0,327861|
-|λ₂ minimale|0,152241|
-|λ₂ maximale|1,139194|
+| Indicateur | Résultat |
+|---|---:|
+| Générations réussies | 100 / 100 |
+| Surface moyenne des salles | 46,13 |
+| Taux d'occupation moyen | 29,51 % |
+| Nombre moyen de connexions | 8,14 |
+| Longueur moyenne des couloirs | 202,16 |
+| λ₂ moyenne | 0,327861 |
+| λ₂ minimale | 0,152241 |
+| λ₂ maximale | 1,139194 |
 
 ## Installation
 
 Python 3 et NumPy sont nécessaires.
 
-Installer les dépendances avec :
+Depuis la racine du dépôt, installer les dépendances avec :
 
-```
-pip install -r requirements.txt
+```bash
+pip install -r Générateur_Donjon/requirements.txt
 ```
 
 ## Exécution
 
-Lancer le programme avec :
+Depuis la racine du dépôt, lancer le programme avec :
 
-```
-python Projet.py
+```bash
+python Générateur_Donjon/Projet.py
 ```
