@@ -545,59 +545,27 @@ def experimenter_generations(nombre_generations):
 
 
 
-#salles = generer_salles()
-#if salles is not None:
-#    graphe = creer_graphe(salles)
-#    graphe = ajouter_connexions(graphe, len(salles))
-#    couloirs = generer_couloirs(salles, graphe)
-#    carte = creer_carte(salles, couloirs)
-#
-#    afficher_carte(carte)
-#    afficher_statistiques(salles, graphe, couloirs, carte)
-#
-#    matrice = creer_matrice_adjacence(graphe)
-#    laplacienne = creer_matrice_laplacienne(matrice)
-#    rang = calculer_rang(laplacienne)
-#    lambda2 = calculer_lambda2(laplacienne)
-#
-#    print("----- ANALYSE MATHEMATIQUE -----")
-#    print("Rang de la matrice laplacienne :", rang)
-#    print("Connexité par le rang :", rang == len(salles) - 1)
-#    print("Valeur de lambda 2 :", round(lambda2, 6))
-#    print("Connexité par lambda 2 :", lambda2 > 1e-10)
-#    print("Limites respectées :", verifier_limites(salles, couloirs))
-#
-#else:
-#    print("Impossible de générer le donjon.")
-
-
-
 def tester_rang():
     graphe1 = {
         0: [1],
         1: [0, 2],
         2: [1]
     }
-
     graphe2 = {
         0: [1, 2],
         1: [0, 2],
         2: [0, 1]
     }
-
     graphe3 = {
         0: [1],
         1: [0],
         2: []
     }
-
     for numero, graphe in enumerate([graphe1, graphe2, graphe3], start=1):
         matrice = creer_matrice_adjacence(graphe)
         laplacienne = creer_matrice_laplacienne(matrice)
-
         rang = calculer_rang(laplacienne)
         lambda2 = calculer_lambda2(laplacienne)
-
         print("Valeur de lambda 2 :", round(lambda2, 6))
         print("TEST", numero)
         print("Rang :", rang)
@@ -605,7 +573,38 @@ def tester_rang():
         print("--------------------")
 
 
+
+def main():
+    salles = generer_salles()
+
+    if salles is not None:
+        graphe = creer_graphe(salles)
+        graphe = ajouter_connexions(graphe, len(salles))
+        couloirs = generer_couloirs(salles, graphe)
+        carte = creer_carte(salles, couloirs)
+
+        afficher_carte(carte)
+        afficher_statistiques(salles, graphe, couloirs, carte)
+
+        matrice = creer_matrice_adjacence(graphe)
+        laplacienne = creer_matrice_laplacienne(matrice)
+        rang = calculer_rang(laplacienne)
+        lambda2 = calculer_lambda2(laplacienne)
+        print("----- ANALYSE MATHEMATIQUE -----")
+        print("Rang de la matrice laplacienne :", rang)
+        print("Connexité par le rang :", rang == len(salles) - 1)
+        print("Valeur de lambda 2 :", round(lambda2, 6))
+        print("Connexité par lambda 2 :", lambda2 > 1e-10)
+        print("Limites respectées :", verifier_limites(salles, couloirs))
+    else:
+        print("Impossible de générer le donjon.")
+
+
+
 #tester_rang()
 #tester_ajout_connexions()
 #comparer_graphes()
 #experimenter_generations(100)
+
+if __name__ == "__main__":
+    main()
