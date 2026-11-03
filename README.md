@@ -2,88 +2,115 @@
 
 Ce dépôt regroupe les travaux pratiques et le projet réalisés dans le cadre de la matière **Outils fondamentaux**.
 
-## Arborescence du dépôt
+## Arborescence
 
 ```text
 Outils-Fondamentaux-TP/
-│
 ├── Générateur_Donjon/
 │   ├── Projet.py
+│   ├── test_projet.py
 │   └── requirements.txt
-│
 ├── TP/
 │   ├── TP1.py
 │   ├── TP2.py
 │   ├── TP3.py
 │   ├── TP4.py
 │   └── TP5.py
-│
 └── README.md
 ```
 
-## Contenu
+Le dossier `TP/` regroupe les travaux pratiques. Le projet personnel et ses tests se trouvent dans `Générateur_Donjon/`.
 
-### Travaux pratiques
+## Projet : générateur de donjons
 
-Le dossier `TP` contient les cinq travaux pratiques réalisés au cours de la matière.
+Le programme génère une carte de 40 × 40 cases composée de huit salles rectangulaires sans chevauchement, reliées par des couloirs. Il affiche la carte, des statistiques géométriques et des indicateurs de connexité du graphe des salles.
 
-## Générateur de donjons en Python
+### Notions mathématiques
 
-### Présentation
+- La matrice d'adjacence représente les connexions entre les salles.
+- La matrice laplacienne est calculée selon $L = D - A$.
+- Le rang est calculé par élimination de Gauss avec une tolérance configurable dans l'expérience numérique.
+- Les valeurs propres sont calculées par rotations de Jacobi ; NumPy sert de référence indépendante dans les tests.
+- Pour un graphe non orienté, la multiplicité de la valeur propre nulle du Laplacien correspond au nombre de composantes connexes. Ainsi, un graphe est connexe si son rang vaut $n - 1$ et si λ₂ est strictement positive, à la précision numérique près.
 
-Ce projet consiste à développer un générateur automatique de donjons en Python dans le cadre d'un projet universitaire.
+### Expériences et interprétation
 
-Le programme génère une carte de 40 × 40 cases composée de salles rectangulaires reliées entre elles par des couloirs.
+Pour comparer des structures à taille et nombre d'arêtes constants, l'expérience ci-dessous construit cinq graphes de huit sommets et dix arêtes :
 
-### Fonctionnalités
+```powershell
+python Générateur_Donjon/Projet.py --experimenter-graphes
+```
 
-- Génération aléatoire de 8 salles.
-- Vérification du chevauchement entre les salles.
-- Création de couloirs entre les salles.
-- Représentation du donjon sous forme de matrice.
-- Affichage du donjon dans le terminal.
-- Calcul de statistiques sur les générations.
-- Vérification des limites de la carte.
+Trois graphes sont connexes ; le quatrième est une clique K5 accompagnée de trois sommets isolés. Les valeurs obtenues sont :
 
-### Partie mathématique
+|Structure|Arêtes|Connexe|Rang du Laplacien|λ₂|
+|---|---:|---:|---:|---:|
+|Cycle avec deux cordes|10|Oui|7|0,763932|
+|Échelle 2×4|10|Oui|7|0,585786|
+|Deux cycles reliés par deux arêtes|10|Oui|7|0,585786|
+|Clique K4 reliée à une chaîne|10|Oui|7|0,202257|
+|Clique K5 et trois sommets isolés|10|Non|4|0|
 
-Le projet utilise plusieurs notions mathématiques :
+Le nombre d'arêtes, à lui seul, ne détermine donc pas la connexité ni la valeur de λ₂. Parmi ces exemples connexes, le cycle avec deux cordes a le λ₂ le plus élevé : il présente la plus forte connectivité algébrique selon cet indicateur. λ₂ ne décrit toutefois pas à lui seul la géométrie des couloirs ni tous les scénarios de panne possibles.
 
-- Matrice d'adjacence pour représenter les connexions.
-- Matrice laplacienne avec la formule L = D - A.
-- Pivot de Gauss pour calculer le rang.
-- Vérification de la connexité à partir du rang de la matrice laplacienne.
-- Calcul de la deuxième plus petite valeur propre λ₂ pour étudier la connectivité algébrique du graphe.
+### Résistance à la suppression d'une arête
 
-### Expérimentations
+L'expérience supprime chaque arête, une à la fois, sur une copie du graphe. Elle compte les ponts (arêtes dont la suppression déconnecte le graphe) et relève le λ₂ minimal après suppression :
 
-Une expérimentation sur 100 générations a donné les résultats suivants :
+```powershell
+python Générateur_Donjon/Projet.py --experimenter-suppressions
+```
 
-| Indicateur | Résultat |
-|---|---:|
-| Générations réussies | 100 / 100 |
-| Surface moyenne des salles | 46,13 |
-| Taux d'occupation moyen | 29,51 % |
-| Nombre moyen de connexions | 8,14 |
-| Longueur moyenne des couloirs | 202,16 |
-| λ₂ moyenne | 0,327861 |
-| λ₂ minimale | 0,152241 |
-| λ₂ maximale | 1,139194 |
+|Structure connexe|λ₂ initial|Ponts|λ₂ minimal après une suppression|
+|---|---:|---:|---:|
+|Cycle avec deux cordes|0,763932|0|0,363595|
+|Échelle 2×4|0,585786|0|0,290725|
+|Deux cycles reliés par deux arêtes|0,585786|0|0,290725|
+|Clique K4 reliée à une chaîne|0,202257|4|0|
 
-## Installation
+Dans ces exemples, les trois premières structures restent connexes après la perte d'une arête. La chaîne attachée à la clique possède quatre ponts : supprimer l'un d'eux déconnecte le graphe et annule λ₂. Cela illustre pourquoi un même nombre de connexions ne garantit pas la même résistance aux coupures. L'étude porte sur des graphes de petite taille et sur la panne d'une arête à la fois.
 
-Python 3 et NumPy sont nécessaires.
+L'expérience sur la tolérance utilise une matrice presque singulière et montre que le rang numérique dépend du seuil choisi :
 
-Depuis la racine du dépôt, installer les dépendances avec :
+```powershell
+python Générateur_Donjon/Projet.py --experimenter-tolerance
+```
 
-```bash
+Enfin, une génération aléatoire conserve volontairement une chaîne d'arêtes comme structure de base ; ses graphes sont donc toujours connexes. Les statistiques distinguent les deux états, mais les graphes déconnectés sont étudiés dans l'expérience comparative plutôt que dans les générations normales.
+
+### Installation et lancement
+
+Le générateur utilise la bibliothèque standard. NumPy est nécessaire aux tests de comparaison ; l'installer depuis la racine du dépôt avec :
+
+```powershell
 pip install -r Générateur_Donjon/requirements.txt
 ```
 
-## Exécution
+Générer et afficher un donjon :
 
-Depuis la racine du dépôt, lancer le programme avec :
-
-```bash
+```powershell
 python Générateur_Donjon/Projet.py
 ```
+
+Lancer 100 générations avec une graine reproductible :
+
+```powershell
+python Générateur_Donjon/Projet.py --experimenter-generations 100 --seed 42
+```
+
+Exécuter les tests, dont la comparaison des valeurs propres avec NumPy :
+
+```powershell
+python -m unittest discover -s Générateur_Donjon -p "test_*.py"
+```
+
+### Limites
+
+- Le rang et les valeurs propres sont des calculs en virgule flottante ; les seuils choisis peuvent affecter les cas proches de zéro.
+- La génération de salles est aléatoire et peut échouer après un nombre limité d'essais.
+- Les couloirs suivent un tracé horizontal puis vertical entre les centres des salles ; ils ne sont pas optimisés pour éviter les autres salles ou couloirs.
+- Les expériences portent sur de petits graphes et ne suffisent pas à généraliser à toutes les topologies.
+
+### Utilisation de l'intelligence artificielle
+
+Un assistant IA a aidé à structurer les expériences, les tests et cette documentation. Le calcul de Jacobi a été comparé à `numpy.linalg.eigvalsh` sur des graphes connus et des matrices symétriques ; les tests automatisés permettent de rejouer ces vérifications.
